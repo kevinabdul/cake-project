@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    
+  cake-service:
+    build:
+      context: ./cake-service
+      dockerfile: ./dockerfile
+    depends_on:
+      - mysql-service
+    ports:
+      - "8000:8000"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - API_SERVER_PORT=${API_SERVER_PORT}
+    networks:
+      - privy
+
+  mysql-service:
+    image: mariadb
+    container_name: mysql-service-1
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_HOST=${MYSQL_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    networks:
+      - privy
+
+
+networks:
+  privy:
+    driver: bridge
